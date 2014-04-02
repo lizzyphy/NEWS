@@ -1,0 +1,125 @@
+.middle{
+	margin:0 auto;
+}
+
+.whole{
+	width: 1200px;
+	font-family: Simsun,Arial;
+	font-size: 12px;
+	line-height: 20px;
+}
+
+.center{
+	text-align:center;
+}
+
+.clear {
+	clear:both;
+	height:0px;
+	overflow:hidden;
+}
+
+.float_left{
+	float:left;
+}
+
+.float_right{
+	float:right;
+}
+
+a{
+	color: #F3C;
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: none;
+}
+
+#head{
+	height:80px;
+	font-size:36px;
+	line-height:36px;
+	color:#F09;
+	background-color:#CFF;
+}
+.title{
+	padding:25px 0px 0px 0px;
+}
+
+ul{
+	margin: 0;
+	padding: 0;
+	
+}
+
+li{
+	width:150px;
+	height:50px;
+	margin: 0;
+	padding: 0px 0px 0px 10px;
+	list-style-type: none;
+	float:left;
+}
+
+.but{
+	box-shadow: none;
+	width: 24px;
+	height: 25px;
+	border: 0px;
+	display: block;
+	_margin-top: 1px;
+	float:left;
+}
+
+.search{
+	box-shadow: none;
+	width: 180px;
+	height: 20px;
+	border: 1px solid #CCC;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-right: 0px;
+}
+
+.search_bg{
+	box-shadow: none;
+	width: 24px;
+	height: 24px;
+	background-image: url(/php/CIphp/images/search.png);
+	background-repeat: no-repeat;
+	background-position: left;
+	border: 1px solid #CCC;
+	border-left: 0px;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.edit_bg{
+	background-image: url(/php/CIphp/images/edit.jpg);
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+.dele_bg{
+	background-image: url(/php/CIphp/images/delete.jpg);
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+.backgroundli{
+	background-image: url(disc.png);
+	background-position: left;
+	background-repeat: no-repeat;
+}
+
+.mainnews{
+	width: 800px;
+}
+button {
+	display: block;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
