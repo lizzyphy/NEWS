@@ -18,31 +18,24 @@ class Home extends CI_Controller
 			//echo "该用户已经登陆";
 			
 			$data['uname'] = $this->session->userdata('uname');
-			if(isset($_GET['newsname']))
-			{
-				$data['newsname'] = $_GET['newsname'];
+			if($this->input->get('newsname',TRUE))
+			{			
+				$data['newsname'] = $this->input->get('newsname',TRUE);
 				$num = $this->db_news->news_sele_num($data['newsname']);
+				$config['base_url'] = '/php/CIphp/index.php/home/index?newsname='.$data['newsname'];
 				
 			}
 			else 
 			{
+				$config['base_url'] = '/php/CIphp/index.php/home/index?';
 				$num = $this->db_news->news_num();
 			}
+			
 			$pagesize=5;
-			$pages=intval($num/$pagesize);                                    //计算总页数
-			if ($num%$pagesize)
-				$pages++;
-			if (isset($_GET['page']))                                         //获取当前页
+			$offset = $this->input->get('per_page',TRUE);
+			if ($this->input->get('newsname',TRUE))
 			{
-				$page=intval($_GET['page']);
-			} 
-			else
-			{
-				$page=1; 
-			} 
-			$offset=$pagesize*($page - 1); 
-			if (isset($_GET['newsname']))
-			{
+				
 				$newsname = $_GET['newsname'];
 				$arr = $this->db_news->news_select($newsname,$pagesize,$offset);
 			}
@@ -50,59 +43,25 @@ class Home extends CI_Controller
 			{
 				$arr = $this->db_news->news_select_all($pagesize,$offset);
 			}
-			
-			$first=1; 
-			$prev=$page-1; 
-			$next=$page+1; 
-			$last=$pages; 
-			$data['first'] = $first;
-			$data['prev'] = $prev;
-			$data['next'] = $next;
-			$data['last'] = $last;
-			$data['page'] = $page;
-			$data['pages'] = $pages;
 			$data['arr'] = $arr;
-			if (!isset($key))
-			{
-				$key = '';
-			}
-			if(isset($data['newsname']))
-			{
-				if ($page > 1) 
-				{
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$first."&newsname=".$newsname."'>首页</a> "; 
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$prev."&newsname=".$newsname."'>上一页</a>"; 
-				} 
-				for ($i = 1;$i < $page;$i++) 
-				$key.= "<a href='/php/CIphp/index.php/home/index?page=".$i."&newsname=".$newsname."'>[".$i."]</a>"; 
-				$key.= "[".$page."]"; 
-				for ($i = $page+1;$i <= $pages;$i++) 
-				$key.= "<a href='/php/CIphp/index.php/home/index?page=".$i."&newsname=".$newsname."'>[".$i ."]</a>"; 
-				if ($page < $pages)
-				{
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$next."&newsname=".$newsname."'>下一页</a>";
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$last."&newsname=".$newsname."'>尾页</a>";
-				}
-			}
-			else
-			{
-				if ($page > 1) 
-				{
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$first."'>首页</a> "; 
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$prev."'>上一页</a>"; 
-				} 
-				for ($i = 1;$i < $page;$i++) 
-				$key.= "<a href='/php/CIphp/index.php/home/index?page=".$i."'>[".$i."]</a>"; 
-				$key.= "[".$page."]"; 
-				for ($i = $page+1;$i <= $pages;$i++) 
-				$key.= "<a href='/php/CIphp/index.php/home/index?page=".$i."'>[".$i ."]</a>"; 
-				if ($page < $pages)
-				{
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$next."'>下一页</a>";
-					$key.= "<a href='/php/CIphp/index.php/home/index?page=".$last."'>尾页</a>";
-				}
-			}
-			$data['key'] = $key;
+			
+			$this->load->library('pagination');
+			//$config['base_url'] = '/php/CIphp/index.php/home/index/';
+			$config['page_query_string'] = TRUE;
+			$config['total_rows'] = $num;
+			$config['per_page'] = $pagesize; 
+			$config['num_links'] = 2;
+			$config['prev_tag_open'] = '<span>';
+			$config['prev_link'] = '上一页';
+			$config['prev_tag_close'] = '</span>';
+			$config['next_tag_open'] = '<span>';
+			$config['next_link'] = '下一页';			
+			$config['next_tag_close'] = '</span>';
+			$config['first_link'] = '首页';
+			$config['last_link'] = '尾页';
+			$this->pagination->initialize($config); 
+			$data['key2'] = $this->pagination->create_links();
+
 			$this->load->view('index',$data);
 			
 		}
@@ -115,20 +74,17 @@ class Home extends CI_Controller
 	
 	function login()
 	{
-		$this->load->model('test_m');
-		$user = $this->test_m->user_select($_POST['uname']);
+		$this->load->model('db_news');
+		$user = $this->db_news->user_select($this->input->post('uname',TRUE));
 		if ($user)
 		{
-			if ($user[0]->upass==$_POST['upass'])
+			if ($user[0]->upass==$this->input->post('upass',TRUE))
 			{
 				$this->load->library('session');
 				$arr = array('uid'=>$user[0]->uid,'uname'=>$user[0]->uname);
 				$this->session->set_userdata($arr);
-				//echo $this->session->userdata('uid');
 				$data['uname'] = $this->session->userdata('uname');
-				//$this->load->view('index',$data);
-				header("location: /php/CIphp/index.php/home/index");
-				exit;
+				 redirect('/home/index', 'refresh');
 			}
 			else
 			{
@@ -159,21 +115,21 @@ class Home extends CI_Controller
 		$this->load->model('db_news');
 		date_default_timezone_set('Etc/GMT-8');
 		$datetime = date("y/m/d \a\\t h:i a");
-		if (empty($_POST['subject']))
+		if (!($this->input->post('subject')))
 		{
 			echo "<script>alert('请输入新闻标题!');history.back();</script>";
 		}
-		elseif (empty($_POST['news']))
+		elseif (!($this->input->post('news')))
 		{
 			echo "<script>alert('请输入新闻内容!');history.back();</script>";
 		}
-		elseif (empty($_POST['author']))
+		elseif (!($this->input->post('author')))
 		{
 			echo "<script>alert('请输入作者姓名!');history.back();</script>";
 		}
 		else 
 		{
-			$arr = array('subject'=>$_POST['subject'],'news'=>$_POST['news'],'author'=>$_POST['author'],'datetime'=>$datetime);
+			$arr = array('subject'=>$this->input->post('subject'),'news'=>$this->input->post('news'),'author'=>$this->input->post('author'),'datetime'=>$datetime);
 			$this->db_news->news_insert($arr);
 			echo '添加新闻成功!';
 			echo "<a href= \"/php/CIphp/index.php/home/index\">返回首页</a>";
@@ -183,7 +139,7 @@ class Home extends CI_Controller
 	
 	function present_news() 
 	{
-		$id = $_GET['id'];
+		$id = $this->input->get('id');
 		$this->load->model('db_news');
 		$arr = $this->db_news->news_edit_select($id);
 		foreach ($arr as $x)
@@ -199,7 +155,7 @@ class Home extends CI_Controller
 	
 	function edit_news() 
 	{
-		$id = $_GET['id'];
+		$id = $this->input->get('id');
 		$this->load->model('db_news');
 		$arr = $this->db_news->news_edit_select($id);
 		foreach ($arr as $x)
@@ -215,23 +171,23 @@ class Home extends CI_Controller
 	
 	function update_news()
 	{
-		if(isset($_POST['edit']))
+		if($this->input->post('edit'))
 		{
-		$id = $_GET['id'];
+		$id = $this->input->get('id');
 		date_default_timezone_set('Etc/GMT-8');
 		$datetime = date("y/m/d \a\\t h:i a");
-		$arr = array('subject'=>$_POST['subject'],'news'=>$_POST['news'],'author'=>$_POST['author'],'datetime'=>$datetime);
+		$arr = array('subject'=>$this->input->post('subject'),'news'=>$this->input->post('news'),'author'=>$this->input->post('author'),'datetime'=>$datetime);
 		$this->load->model('db_news');
 		$this->db_news->news_update($id,$arr);
 		}
-		header("location: /php/CIphp/index.php/home/index");
+		redirect('home/index');
 	}
 	
 	function dele_news() 
 	{
-		$id = $_GET['id'];
+		$id = $this->input->get('id');
 		$this->load->model('db_news');
 		$this->db_news->news_del($id);
-		header("location: /php/CIphp/index.php/home/index");
+		redirect('/home/index');
 	}
 }
