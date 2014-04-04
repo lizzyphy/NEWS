@@ -78,10 +78,11 @@ ENDIT;
 				</ul>
 			</div>
 		<?php 		
-		}
-		echo "<div align = 'center' class = 'middle'>共".$pages."页(".$page."/".$pages.")";
-		echo "$key";
+		}		
 		?>
+		</div>
+		<div class = "middle">
+		<p class = "center"><?php echo "$key2"; ?></p>
 		</div>
 	
 </body>

@@ -7,19 +7,15 @@
 </head>
 
 <body class = "middle whole">
-<?php
-	echo <<<ENDIT
 	<div class = "middle mainnews">
-		<div id = "subject" class = "center"><p>{$subject}</p></div>
+		<div id = "subject" class = "center"><p><?php echo $subject ?></p></div>
 		<div id = "datetime">
-			<span class="pad">发布者&nbsp;&nbsp;$author</span>
-			<span class = "float_right">发布时间&nbsp;&nbsp;$datetime</span>
+			<span class="pad">发布者&nbsp;&nbsp;<?php echo $author ?></span>
+			<span class = "float_right">发布时间&nbsp;&nbsp;<?php echo $datetime ?></span>
 			
 		</div>
-		<div id = "news"><p>{$news}</p></div>
+		<div id = "news"><p><?php echo $news ?></p></div>
 		<div class = "clear"></div>
 	</div>
-ENDIT;
-?>
 </body>
 </html>
