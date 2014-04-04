@@ -70,4 +70,12 @@ class DB_news extends CI_Model
 		$query = $this->db->get('news');
 		return $query->result();
 	}
+	
+	function user_select($name) 
+	{
+		$this->db->where('uname',$name);
+		$this->db->select('*');
+		$query = $this->db->get('user');
+		return $query->result();
+	}
 }
